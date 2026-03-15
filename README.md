@@ -82,13 +82,25 @@ Type / in the chat input to see available commands:
 - /shrug: Append ¯\_(ツ)_/¯.
 - /tableflip: (╯°□°）╯︵ ┻━┻.
 
-## Configuration & Security
+## Configuration
 
 ### Server Arguments
-- -i, --ip: Bind IP address.
-- -p, --port: Main TCP port (default: 443).
-- -v, --voice-port: UDP Voice port (default: 4077).
-- --video-port: UDP Video port (default: 4078).
+These arguments can be passed when running the server binary directly.
+
+- `-i, --ip`: Bind IP address (default: 127.0.0.1).
+- `-p, --port`: Main TCP port for WebSocket/HTTP (default: 443).
+- `--http-port`: Port for HTTP to HTTPS redirection (default: 80).
+- `--no-tls`: Disable internal encryption (required when using a reverse proxy like Caddy or Nginx).
+- `-v, --voice-port`: UDP port for Voice data (default: 4077).
+- `--video-port`: UDP port for Video/Screen Share data (default: 4078).
+- `-d, --storage-dir`: Directory for chat media and uploads (default: uploads).
+- `--db-path`: Custom path to the SQLite database file.
+- `--log-dir`: Directory for rotating log files (default: logs).
+- `-a, --admin`: Admin username (required for first-time owner creation).
+- `-w, --password`: Admin password (required for first-time owner creation).
+
+### Environment Variables
+All server arguments can also be set via environment variables (e.g., `PORT=8443`, `ADMIN_USER=admin`). This is the preferred method for Docker deployments.
 
 ### Security Features
 - Secure-by-Default: No default passwords; admin must be set on first run.
