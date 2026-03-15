@@ -1,10 +1,10 @@
-# GoodComms v0.9.97 🚀
+# GoodComms v0.9.97 
 
 **High-performance, self-hosted communication platform built in Rust.**
 
 GoodComms is a lightweight, secure alternative to centralized chat platforms, engineered for speed and stability. Zero cloud dependency — the server is a pure packet relay that does no media processing.
 
-## ✨ Key Features
+## Key Features
 
 - **Native Windows GPU Video Pipeline**: 100% native screen sharing using D3D11, MFT hardware H.264 encode/decode, and Windows Graphics Capture. Zero FFmpeg dependency on Windows.
 - **GPU-Direct Video Display**: Decoded frames presented via native Win32 HWND + DXGI swap chain — zero CPU readback. Each watched stream opens in its own native window with a media controls toolbar.
@@ -18,7 +18,7 @@ GoodComms is a lightweight, secure alternative to centralized chat platforms, en
 
 ---
 
-## 💬 Message Formatting
+## Message Formatting
 
 GoodComms supports Markdown-style text formatting in chat messages.
 
@@ -65,7 +65,7 @@ Language labels are display-only (no syntax highlighting yet). Any word works: `
 
 ---
 
-## ⌨️ Slash Commands
+## Slash Commands
 
 GoodComms supports slash commands in chat. Type `/` to see available commands.
 
@@ -88,7 +88,7 @@ Example: Create a `/serverinfo` command that responds with server info.
 
 ---
 
-## 🔐 Roles & Permissions
+## Roles & Permissions
 
 ### Permission Matrix
 In **Admin → Channels → Permissions**, each role shows permissions with status indicators:
@@ -124,9 +124,9 @@ These apply server-wide, not per-channel:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 🖥️ Client (gc-client)
+### Client (gc-client)
 
 #### **Windows** (Primary Platform)
 No external dependencies required. The Windows client uses 100% native Windows APIs (D3D11/MFT/WGC) for video.
@@ -163,7 +163,7 @@ sudo dnf install alsa-lib pulseaudio-libs pipewire-libs xdg-desktop-portal libX1
 
 ---
 
-### 🌐 Server (gc-server)
+### Server (gc-server)
 
 The server is a pure relay/SFU — zero media processing. Designed to run on minimal hardware (1 vCPU / 1GB RAM VPS).
 
@@ -209,7 +209,7 @@ The included `docker-compose.yml` has all three deployment modes (Standalone, Re
 
 ---
 
-## 🛠️ Configuration
+## Configuration
 
 ### Server Arguments
 - `-i, --ip`: Bind IP address (default: `127.0.0.1`)
@@ -223,7 +223,7 @@ The included `docker-compose.yml` has all three deployment modes (Standalone, Re
 - `--log-dir`: Directory for rotating log files (default: `logs/`, set empty to disable)
 - `--log-max-size-mb`: Max log file size in MB before rotation (default: `50`)
 - `--log-max-files`: Number of rotated log files to keep (default: `5`)
-- `-a, --admin`: Admin username (set on first run)
+- `-a, --admin`: Admin username (set on first run,)
 - `-w, --password`: Admin password (set on first run)
 
 All arguments can also be set via environment variables.
@@ -248,7 +248,7 @@ Then clients connect to `your-ip:8443`.
 
 ---
 
-## 🛡️ Security & Bootstrapping
+## Security & Bootstrapping
 
 GoodComms uses a "Secure-by-Default" philosophy. **There is no default "admin/admin" login.**
 
@@ -270,7 +270,7 @@ GoodComms uses a "Secure-by-Default" philosophy. **There is no default "admin/ad
 
 ---
 
-## ⚠️ Known Limitations
+## Known Limitations
 
 ### Linux
 | Area | Limitation |
