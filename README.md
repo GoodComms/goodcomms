@@ -2,135 +2,114 @@
 
 High-performance, self-hosted communication platform built in Rust.
 
-GoodComms is a lightweight, secure alternative to centralized chat platforms. It is engineered for speed and stability with zero cloud dependencies. The server acts as a pure packet relay, ensuring your data remains private and under your control.
+GoodComms is a lightweight, secure alternative to centralized chat platforms. It is engineered for speed and stability with zero cloud dependencies and zero telemetry. The server acts as a pure packet relay, ensuring your data remains private and under your control.
 
 ## Key Features
 
 - Built for Speed: Native Windows and Linux applications that respect system resources. No web-browser bloat.
 - High-Quality Video: Smooth, low-latency screen sharing designed for high-resolution displays.
-- Privacy First: Self-host your own Private Fortress. Your messages, files, and voice data stay on your hardware.
+- Privacy First: 100% Private. No telemetry, no tracking, and no cloud dependencies (optional GIF search is controlled by the server owner).
 - Crystal Clear Voice: Robust audio engine with push-to-talk and noise suppression support.
 - Modern Chat Experience: Full Markdown support, code blocks with language labels, and interactive slash commands.
 - Sovereign Data: Built-in Server Drive for private file storage and sharing directly from your own server.
 
-## Message Formatting
+## Getting Started: Client
 
-GoodComms supports Markdown-style text formatting in chat messages.
+The GoodComms client is available for Windows and Linux.
 
-Keyboard shortcuts in the chat input:
-- Enter: send message
-- Shift+Enter: new line (for multi-line messages and code blocks)
-- Ctrl+V: paste (multi-line text pastes correctly)
-
-### Inline Formatting
-
-| Format | Syntax | Example |
-|---|---|---|
-| Bold | **text** | **text** |
-| Italic | *text* | *text* |
-| Strikethrough | ~~text~~ | ~~text~~ |
-| Inline code | `code` | `code` |
-
-### Code Blocks
-
-Wrap code in triple backticks on their own lines. Optionally add a language name after the opening fence to display a label above the block.
-
-Example:
-```rust
-fn hello() {
-    println!("Hello!");
-}
-```
-
-## Slash Commands
-
-GoodComms supports slash commands in chat. Type / to see available commands.
-
-### Built-in Commands
-- /me <text>: Display an action message (italicized)
-- /shrug: Append ¯\_(ツ)_/¯
-- /tableflip: (╯°□°）╯︵ ┻━┻
-- /unflip: ┬─┬ノ( º _ ºノ)
-
-### Custom Commands (Admin)
-Admins can create custom slash commands via Admin -> Slash Commands for text responses, webhooks, or server-side actions.
-
-## Roles and Permissions
-
-### Permission Matrix
-In Admin -> Channels -> Permissions, permissions are shown with status indicators:
-- Filled: Explicitly set for this channel
-- Half: Inherited from global role permissions
-- Empty: Not set (denied)
-
-### Channel-Specific Permissions
-- view_channel: See channel in list
-- send_message: Post messages
-- join_voice: Join voice channels
-- speak_voice: Talk in voice
-- manage_messages: Pin/delete messages
-- manage_users: Kick/ban users
-- manage_webhooks: Create webhooks and slash commands
-
-## Getting Started
-
-### Client (gc-client)
-
-#### Windows
-The Windows client uses native APIs for optimal performance. No external dependencies are required for standard operation.
-
-#### Portable Data Mode
-1. Create a folder named "data" in the same directory as the executable.
-2. All configuration, logs, and cache files will be stored inside this folder.
-
-#### Linux Runtime Dependencies
-The Linux client requires PipeWire and xdg-desktop-portal for screen capture. Ensure your distribution has these components installed and running.
-
-### Server (gc-server)
-
-The server is a lightweight relay designed to run on minimal hardware.
-
-#### Execution
-- Standalone: ./gc-server --ip 0.0.0.0 --port 443
-- Behind Proxy: ./gc-server --ip 127.0.0.1 --port 4076 --no-tls
-
-## Configuration
-
-### Server Arguments
-- -i, --ip: Bind IP address
-- -p, --port: Main TCP port for WebSocket/HTTP (default: 443)
-- --no-tls: Disable internal encryption (use when behind a reverse proxy)
-- -v, --voice-port: UDP Voice port (default: 4077)
-- --video-port: UDP Video port (default: 4078)
-- -d, --storage-dir: Directory for chat media
-- -a, --admin: Admin username (set on first run)
-- -w, --password: Admin password (set on first run)
-
-All arguments can also be set via environment variables.
-
-## Security
-
-GoodComms uses a secure-by-default philosophy.
-- Bootstrapping: You must set an admin username and password on the first run.
-- Authentication: JWT-based sessions with immediate revocation on logout.
-- Encryption: Passwords hashed with Argon2. Secure TLS used for all communications.
-- Hardening: Rate limiting, SSRF protection, and parameterized SQL queries are used throughout the system.
-
-## Known Limitations
+### Windows: Installer vs. Portable
+- Windows Installer (.exe setup): The standard way to install the app. It handles file placement and creates desktop shortcuts. Note: Updates are manual; to update, simply run the installer for the new version.
+- Portable Mode (.exe): For users who want to run GoodComms without installation.
+  - To enable Portable Mode, create a folder named "data" in the same directory as the executable.
+  - All configuration, logs, and cache files will be stored inside this folder.
 
 ### Linux
-- System audio loopback is not supported for screen sharing.
-- Sharing individual windows may result in a black screen; use full display share.
-- Software-based video encoding/decoding leads to higher CPU usage than Windows.
+The Linux client is provided as a portable binary. It requires PipeWire and xdg-desktop-portal for screen capture. Ensure these are installed and running on your distribution.
 
-### All Platforms
-- Camera capture is not yet implemented.
-- Folder sizes in the Drive display as 0.0 MB.
+### Joining a Server
+1. Launch the client and click the plus (+) icon in the left sidebar.
+2. Enter the server address (domain or IP).
+3. If it is your first time on that server, follow the prompts to register a new account. Your credentials are specific to that server only.
+
+## Getting Started: Server
+
+The GoodComms server is a lightweight relay designed to run on minimal hardware (1 vCPU / 1GB RAM).
+
+### Quick Start with Docker (Recommended)
+The fastest way to get a server running is using Docker Compose:
+
+```yaml
+services:
+  goodcomms-server:
+    image: goodcomms/gc-server:latest
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
+      - "4077-4078:4077-4078/udp"
+    environment:
+      - ADMIN_USER=your_username
+      - ADMIN_PASS=your_secure_password
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+      - ./drive:/app/drive
+```
+
+### Administrative Setup (Owner Flow)
+1. Set your `ADMIN_USER` and `ADMIN_PASS` environment variables (or CLI arguments) before starting the server for the first time.
+2. Once the server is running, connect using the client and log in with these credentials to claim "Owner" status.
+3. **Security Note**: After the first successful login, it is recommended to remove the `ADMIN_USER` and `ADMIN_PASS` variables from your configuration/docker-compose file to prevent accidental credential exposure.
+4. Open the "Admin" panel in the client to manage channels and roles.
+
+## Message Formatting
+
+GoodComms supports Markdown-style text formatting:
+- Bold: **text**
+- Italic: *text*
+- Strikethrough: ~~text~~
+- Inline code: `code`
+- Code Blocks: Wrap code in triple backticks on their own lines.
+
+Keyboard shortcuts:
+- Enter: Send message.
+- Shift+Enter: New line.
+- Ctrl+V: Paste text or images.
+
+## Slash Commands
+Type / in the chat input to see available commands:
+- /me <text>: Action message (italicized).
+- /shrug: Append ¯\_(ツ)_/¯.
+- /tableflip: (╯°□°）╯︵ ┻━┻.
+
+## Configuration & Security
+
+### Server Arguments
+- -i, --ip: Bind IP address.
+- -p, --port: Main TCP port (default: 443).
+- -v, --voice-port: UDP Voice port (default: 4077).
+- --video-port: UDP Video port (default: 4078).
+
+### Security Features
+- Secure-by-Default: No default passwords; admin must be set on first run.
+- Authentication: JWT-based sessions with immediate revocation on logout.
+- Encryption: Passwords hashed with Argon2; TLS used for all communications.
+- Hardening: Rate limiting, SSRF protection, and parameterized SQL queries.
+
+## Documentation
+For more detailed information, see the files in the docs/ directory:
+- GETTING_STARTED.md: A more in-depth guide for new users and admins.
+- DEPLOYMENT_SCENARIOS.md: Advanced server setups (Caddy, Nginx, etc.).
+- GIF_SETUP.md: Enabling GIF search in chat.
+
+## Known Limitations
+- Linux: System audio loopback is not supported; software-only video encoding.
+- Camera: Camera capture is not yet implemented.
+- Drive: Folder sizes display as 0.0 MB.
 
 GoodComms v0.9.97 - Engineered for Privacy. Built with Rust.
 
 ## Technical Specifications
-
 - Native Windows GPU Video Pipeline: Uses D3D11, MFT hardware H.264, and Windows Graphics Capture.
 - GPU-Direct Video Display: Frames presented via Win32 HWND and DXGI swap chain.
 - Simulcast Video SFU: Server-routed multi-quality video streams.
