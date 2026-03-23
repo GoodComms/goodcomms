@@ -60,7 +60,7 @@ Click **Go Live** in the bottom left and choose a window or display. Your stream
 | Strikethrough | `~~text~~` |
 | Inline code | `` `code` `` |
 | Code block | ` ```code``` ` |
-| Slash commands | `/me`, `/shrug`, `/tableflip` |
+| Slash commands | `/me`, `/shrug`, `/tableflip`, `/unflip` |
 
 ---
 
