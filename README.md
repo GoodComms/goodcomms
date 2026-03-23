@@ -1,129 +1,268 @@
-# GoodComms v0.9.97
+# GoodComms v0.9.98
 
-High-performance, self-hosted communication platform built in Rust.
+A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing — native Rust clients, lightweight server, your data on hardware you own.
 
-GoodComms is a lightweight, secure alternative to centralized chat platforms. It is engineered for speed and stability with zero cloud dependencies and zero telemetry. The server acts as a pure packet relay, ensuring your data remains private and under your control.
+---
+
+## Why GoodComms?
+
+Most communication platforms — even those that offer "self-hosting" — still tie you to a centralized account system, ship as Electron web apps, or collect data somewhere in the pipeline. GoodComms doesn't do any of that.
+
+- **No cloud accounts.** You register on the server you connect to. That's the only place your account exists — no global GoodComms account, no OAuth, no third-party identity provider.
+- **No telemetry.** No analytics, no tracking, no external calls. The only optional network dependency is GIF search, controlled entirely by the server owner.
+- **Pure native clients.** Windows and Linux binaries compiled from Rust. No browser engine, no Electron, no runtime. Download and run — the same model as old-school TeamSpeak, before everything moved to the cloud.
+- **No surveillance logging.** Server logs contain no IP addresses or account identifiers. Privacy by design.
+- **Lightweight server.** The server authenticates sessions, stores messages in SQLite, and routes media packets without ever processing or decoding them. CPU and RAM requirements are minimal; bandwidth and storage are the real scaling factors.
+
+If you have a friend or community member willing to run a server, all your communication stays between you and them — not a corporation in the middle.
+
+---
 
 ## Key Features
 
-- Built for Speed: Native Windows and Linux applications that respect system resources. No web-browser bloat.
-- High-Quality Video: Smooth, low-latency screen sharing designed for high-resolution displays.
-- Privacy First: 100% Private. No telemetry, no tracking, and no cloud dependencies (optional GIF search is controlled by the server owner).
-- Crystal Clear Voice: Robust audio engine with push-to-talk and noise suppression support.
-- Modern Chat Experience: Full Markdown support, code blocks with language labels, and interactive slash commands.
-- Sovereign Data: Built-in Server Drive for private file storage and sharing directly from your own server.
+- **Native Performance**: Chat UI renders on the CPU (tiny-skia). Video pipeline runs on the GPU. Neither interferes with the other.
+- **GPU-Accelerated Screen Sharing (Windows)**: Windows Graphics Capture + D3D11 + MFT H.264. Auto-detects NVIDIA, Intel, or AMD hardware. Software fallback on Linux via PipeWire.
+- **Crystal Clear Voice**: Opus audio with noise suppression, AGC, push-to-talk, per-user volume, and deafen support.
+- **Role-Based Access Control**: Hierarchical role system with channel-level and server-wide permissions. Private channels with explicit access control.
+- **Server Drive**: Built-in private file storage running on your own hardware — no third-party cloud.
+- **Webhooks & Slash Commands**: Push messages from external services into channels, or trigger external endpoints from chat commands.
 
-## Getting Started: Client
+---
 
-The GoodComms client is available for Windows and Linux.
+## For Users — Get Connected
 
-### Windows: Installer vs. Portable
-- Windows Installer (.exe setup): The standard way to install the app. It handles file placement and creates desktop shortcuts. Note: Updates are manual; to update, simply run the installer for the new version.
-- Portable Mode (.exe): For users who want to run GoodComms without installation.
-  - To enable Portable Mode, create a folder named "data" in the same directory as the executable.
-  - All configuration, logs, and cache files will be stored inside this folder.
+### Step 1: Download and Install
 
-### Linux
-The Linux client is provided as a portable binary. It requires PipeWire and xdg-desktop-portal for screen capture. Ensure these are installed and running on your distribution.
+- **Windows (Recommended):** Run `gc-client_0.9.98_x64-setup.exe`. Installs with a desktop shortcut. To update, run the new installer.
+- **Windows (Portable):** Run `gc-client.exe` directly. Create a `data/` folder next to the `.exe` to enable Portable Mode — all settings, logs, and cache stay in that folder.
+- **Linux:** Portable binary. Requires PipeWire and xdg-desktop-portal for screen sharing.
 
-### Joining a Server
-1. Launch the client and click the plus (+) icon in the left sidebar.
-2. Enter the server address (domain or IP).
-3. If it is your first time on that server, follow the prompts to register a new account. Your credentials are specific to that server only.
+### Step 2: Add a Server and Log In
 
-## Getting Started: Server
+1. Launch the app and click the **+** icon in the sidebar. Enter the address your admin gave you (e.g. `chat.example.com` or an IP address) and click **Connect**.
+2. Create a new account or log in with existing credentials. Accounts are local to each server — there is no global GoodComms account.
+3. Enable **Save Password** to get a one-click quick-join button on your next launch.
 
-The GoodComms server is a lightweight relay designed to run on minimal hardware (1 vCPU / 1GB RAM).
+### Step 3: Voice Channels
 
-### Quick Start with Docker (Recommended)
-The fastest way to get a server running is using Docker Compose:
+Voice-enabled channels show a **Join Voice** button. Once in voice, right-click any user for per-user volume controls. Your own mic mute and deafen are at the top of the app.
+
+### Step 4: Screen Sharing
+
+Click **Go Live** in the bottom left and choose a window or display. Your stream attaches to the channel you had open. To watch someone else's stream, open their channel and click **Watch** next to their name.
+
+### Chat Formatting
+
+| Format | Syntax |
+|--------|--------|
+| Bold | `**text**` |
+| Italic | `*text*` |
+| Strikethrough | `~~text~~` |
+| Inline code | `` `code` `` |
+| Code block | ` ```code``` ` |
+| Slash commands | `/me`, `/shrug`, `/tableflip` |
+
+---
+
+## For Server Owners
+
+### Quick Start — Recommended Setup (Reverse Proxy)
+
+The recommended production setup uses a reverse proxy to handle TLS. GoodComms listens on port 4076; your proxy (Caddy, Nginx, Traefik) forwards HTTPS traffic to it.
+
+How your proxy reaches GoodComms depends on where your proxy runs:
+
+**Option A — Proxy on the host (Caddy installed directly on the server)**
+
+Expose port 4076 to the host's loopback interface. No shared Docker network needed — GoodComms is self-contained and your proxy hits it via `localhost`.
 
 ```yaml
 services:
   goodcomms-server:
     image: goodcomms/gc-server:latest
+    container_name: gc-server
     restart: unless-stopped
     ports:
-      - "443:443"
-      - "80:80"
-      - "4077-4078:4077-4078/udp"
+      - "127.0.0.1:4076:4076"  # TCP — host-only, your proxy connects here
+      - "4077:4077/udp"         # Voice (Opus)
+      - "4078:4078/udp"         # Video (H.264)
     environment:
-      - ADMIN_USER=your_username
-      - ADMIN_PASS=your_secure_password
+      - IP_ADDR=0.0.0.0
+      - PORT=4076
+      - NO_TLS=true
+      - DATABASE_PATH=/app/data/goodcomms.db
+      - STORAGE_DIR=/app/uploads
+      - DRIVE_DIR=/app/drive
+      # First run only — remove after logging in:
+      # - ADMIN_USER=your_username
+      # - ADMIN_PASS=your_secure_password
+      - LOG_DIR=/app/logs
     volumes:
       - ./data:/app/data
       - ./uploads:/app/uploads
       - ./drive:/app/drive
+      - ./logs:/app/logs
 ```
 
-### Administrative Setup (Owner Flow)
-1. Set your `ADMIN_USER` and `ADMIN_PASS` environment variables (or CLI arguments) before starting the server for the first time.
-2. Once the server is running, connect using the client and log in with these credentials to claim "Owner" status.
-3. **Security Note**: After the first successful login, it is recommended to remove the `ADMIN_USER` and `ADMIN_PASS` variables from your configuration/docker-compose file to prevent accidental credential exposure.
-4. Open the "Admin" panel in the client to manage channels and roles.
+```
+# Caddyfile
+chat.yourdomain.com {
+    reverse_proxy localhost:4076
+}
+```
 
-## Message Formatting
+> **Proxy on a different LAN machine?** Replace `127.0.0.1:4076:4076` with `4076:4076` to bind to all interfaces, then point your proxy at this server's LAN IP (e.g. `reverse_proxy 192.168.1.50:4076`). Ensure your firewall blocks port 4076 from the internet — it's plain HTTP.
 
-GoodComms supports Markdown-style text formatting:
-- Bold: **text**
-- Italic: *text*
-- Strikethrough: ~~text~~
-- Inline code: `code`
-- Code Blocks: Wrap code in triple backticks on their own lines.
+**Option B — Proxy in Docker (Caddy running as a container)**
 
-Keyboard shortcuts:
-- Enter: Send message.
-- Shift+Enter: New line.
-- Ctrl+V: Paste text or images.
+Add both containers to the same Docker network. Caddy reaches GoodComms by container name — no port needs to be exposed to the host at all.
 
-## Slash Commands
-Type / in the chat input to see available commands:
-- /me <text>: Action message (italicized).
-- /shrug: Append ¯\_(ツ)_/¯.
-- /tableflip: (╯°□°）╯︵ ┻━┻.
+```yaml
+services:
+  goodcomms-server:
+    image: goodcomms/gc-server:latest
+    container_name: gc-server
+    restart: unless-stopped
+    networks:
+      - proxy-network        # Must match the network your Caddy container is on
+    ports:
+      - "4077:4077/udp"      # Voice (Opus)
+      - "4078:4078/udp"      # Video (H.264)
+    environment:
+      - IP_ADDR=0.0.0.0
+      - PORT=4076
+      - NO_TLS=true
+      - DATABASE_PATH=/app/data/goodcomms.db
+      - STORAGE_DIR=/app/uploads
+      - DRIVE_DIR=/app/drive
+      # First run only — remove after logging in:
+      # - ADMIN_USER=your_username
+      # - ADMIN_PASS=your_secure_password
+      - LOG_DIR=/app/logs
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+      - ./drive:/app/drive
+      - ./logs:/app/logs
 
-## Configuration
+networks:
+  proxy-network:
+    external: true            # Your existing Caddy network
+```
 
-### Server Arguments
-These arguments can be passed when running the server binary directly.
+```
+# Caddyfile
+chat.yourdomain.com {
+    reverse_proxy gc-server:4076    # Container name resolves on the shared network
+}
+```
 
-- `-i, --ip`: Bind IP address (default: 127.0.0.1).
-- `-p, --port`: Main TCP port for WebSocket/HTTP (default: 443).
-- `--http-port`: Port for HTTP to HTTPS redirection (default: 80).
-- `--no-tls`: Disable internal encryption (required when using a reverse proxy like Caddy or Nginx).
-- `-v, --voice-port`: UDP port for Voice data (default: 4077).
-- `--video-port`: UDP port for Video/Screen Share data (default: 4078).
-- `-d, --storage-dir`: Directory for chat media and uploads (default: uploads).
-- `--db-path`: Custom path to the SQLite database file.
-- `--log-dir`: Directory for rotating log files (default: logs).
-- `-a, --admin`: Admin username (required for first-time owner creation).
-- `-w, --password`: Admin password (required for first-time owner creation).
+> For standalone (no domain / LAN) and manual TLS setups, see [Deployment Scenarios](docs/DEPLOYMENT_SCENARIOS.md).
 
-### Environment Variables
-All server arguments can also be set via environment variables (e.g., `PORT=8443`, `ADMIN_USER=admin`). This is the preferred method for Docker deployments.
+### First-Time Setup (Owner Bootstrap)
 
-### Security Features
-- Secure-by-Default: No default passwords; admin must be set on first run.
-- Authentication: JWT-based sessions with immediate revocation on logout.
-- Encryption: Passwords hashed with Argon2; TLS used for all communications.
-- Hardening: Rate limiting, SSRF protection, and parameterized SQL queries.
+1. Uncomment `ADMIN_USER` and `ADMIN_PASS` in your compose file and set your credentials before first launch.
+2. Start the server: `docker compose up -d`
+3. Connect with the client and log in to claim **Owner** status.
+4. **Security**: Stop the server (`docker compose down`), remove the `ADMIN_USER` and `ADMIN_PASS` lines, then restart (`docker compose up -d`). Your account is now in the database — credentials in a config file are a security risk.
 
-## Documentation
-For more detailed information, see the files in the docs/ directory:
-- GETTING_STARTED.md: A more in-depth guide for new users and admins.
-- DEPLOYMENT_SCENARIOS.md: Advanced server setups (Caddy, Nginx, etc.).
-- GIF_SETUP.md: Enabling GIF search in chat.
+> **Firewall**: UDP ports 4077 and 4078 must be open. TCP is handled by your proxy. Without the UDP ports, voice and video will not work.
+
+### Configuration Reference
+
+All options can be set via CLI flag or environment variable. Environment variables take precedence.
+
+| Feature | CLI Flag | Env Variable | Default |
+| :--- | :--- | :--- | :--- |
+| Bind IP | `-i`, `--ip` | `IP_ADDR` | `127.0.0.1` |
+| Main Port (TCP) | `-p`, `--port` | `PORT` | `443` |
+| HTTP Port | `--http-port` | `HTTP_PORT` | `80` |
+| Admin User | `-a`, `--admin` | `ADMIN_USER` | *(first run only)* |
+| Admin Password | `-w`, `--password` | `ADMIN_PASS` | *(first run only)* |
+| Voice Port (UDP) | `-v`, `--voice-port` | `VOICE_PORT` | `4077` |
+| Video Port (UDP) | `--video-port` | `VIDEO_PORT` | `4078` |
+| Database Path | `--db-path` | `DATABASE_PATH` | `goodcomms.db` |
+| File Upload Dir | — | `STORAGE_DIR` | `uploads` |
+| Server Drive Dir | — | `DRIVE_DIR` | `drive` |
+| Message Retention | — | `RETENTION_DAYS` | `0` *(disabled)* |
+| TLS Certificate | — | `TLS_CERT_PATH` | *(auto self-signed)* |
+| TLS Private Key | — | `TLS_KEY_PATH` | *(auto self-signed)* |
+| Disable TLS | `--no-tls` | `NO_TLS` | `false` |
+| Log Directory | `--log-dir` | `LOG_DIR` | `logs` |
+
+All ports are fully configurable. When using Docker Compose, changing a port requires updating **both** the environment variable **and** the `ports:` mapping — they must match. For example, to run the voice relay on port 5000:
+
+```yaml
+environment:
+  - VOICE_PORT=5000
+ports:
+  - "5000:5000/udp"   # was 4077:4077/udp
+```
+
+This applies to `PORT`, `VOICE_PORT`, and `VIDEO_PORT`. The internal `PORT` value is particularly useful if another service already occupies 4076. Note that for reverse proxy setups, the internal `PORT` is invisible to clients — only the proxy's public-facing port matters to them.
+
+**CLI example:**
+```bash
+./gc-server --port 8443 --admin myname --password mysecret --no-tls
+```
+
+### Administration
+
+#### Roles and Permissions
+
+GoodComms uses a hierarchical role system. Roles with a higher Hierarchy number have authority over lower ones.
+
+Default roles:
+- **Owner (Hierarchy 101)**: Bypasses all permission checks.
+- **Administrator (Hierarchy 100)**: Broad administrative access.
+- **Default (Hierarchy 10)**: Base role for all new members.
+
+Permissions span channel-level controls (view, send, voice, manage messages, manage users, webhooks) and server-wide controls (manage channels, manage roles, drive read/write/manage). See [GETTING_STARTED.md](docs/GETTING_STARTED.md) for a moderator role walkthrough.
+
+#### Security Hardening
+
+- **Bootstrapping**: No default passwords — owner credentials must be set explicitly and removed after first login.
+- **Revocation**: JWT sessions are invalidated immediately on logout or credential change.
+- **Privacy**: All media, avatars, and drive files require a valid authentication token — no public routes.
+- **Hardening**: Rate limiting, SSRF protection for link previews, parameterized queries throughout.
+
+---
 
 ## Known Limitations
-- Linux: System audio loopback is not supported; software-only video encoding.
-- Camera: Camera capture is not yet implemented.
-- Drive: Folder sizes display as 0.0 MB.
 
-GoodComms v0.9.97 - Engineered for Privacy. Built with Rust.
+### All Platforms
+- **Screen sharing**: Starting a second stream in the same app session may not be visible to viewers. Restart the client before streaming again if this occurs.
+- **Privacy Settings**: A channel cannot be switched between Public and Private after it is created. If you need to change a channel's privacy, please delete it and create a new one.
+
+### Linux
+- Screen sharing: System audio loopback is not supported.
+- Audio: Per-user volume sliders can only lower volume, not boost.
+
+---
 
 ## Technical Specifications
-- Native Windows GPU Video Pipeline: Uses D3D11, MFT hardware H.264, and Windows Graphics Capture.
-- GPU-Direct Video Display: Frames presented via Win32 HWND and DXGI swap chain.
-- Simulcast Video SFU: Server-routed multi-quality video streams.
-- FEC Parity Recovery: XOR-based forward error correction for packet loss recovery.
-- Binary Protocol V5: Optimized header system for low-latency media relay.
+
+- **Clients**: Native Windows and Linux binaries (Rust). Chat UI: tiny-skia (CPU). Video pipeline: Direct3D 11 + Windows Graphics Capture + MFT H.264 (GPU, Windows); PipeWire + OpenH264 (software, Linux).
+- **Server**: Single Rust binary. Axum HTTP/WebSocket + UDP relay. SQLite via sqlx. Pure packet relay — zero media processing server-side.
+- **Video**: Simulcast SFU with FEC parity recovery for single-fragment packet loss. Quality tiers: Source / 1080p / 720p.
+- **Audio**: Opus codec. Jitter buffer, noise suppression (nnnoiseless), AGC, push-to-talk.
+- **Protocol**: V5 binary header (20 bytes) for low-latency media relay.
+
+---
+
+## Further Reading
+
+- [Getting Started](docs/GETTING_STARTED.md) — detailed walkthrough for users and server owners
+- [Deployment Scenarios](docs/DEPLOYMENT_SCENARIOS.md) — reverse proxy, self-signed TLS, and manual TLS
+- [Webhooks & Slash Commands](docs/WEBHOOKS.md) — integrating bots and external services
+- [GIF Search Setup](docs/GIF_SETUP.md) — optional Giphy/Klipy configuration
+
+---
+
+## Getting Help
+
+Found a bug or have a question? Open an issue: [github.com/goodcomms/goodcomms/issues](https://github.com/goodcomms/goodcomms/issues)
+
+---
+
+*GoodComms v0.9.98 — Engineered for Privacy. Built with Rust.*
