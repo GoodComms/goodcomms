@@ -220,7 +220,7 @@ In **Admin → Channels**, click **New Channel**.
 
 - **Type**: Toggle **Text**, **Voice**, or both independently. A channel can support simultaneous text and voice.
 - **Private**: Hides the channel from everyone except roles you explicitly grant access to.
-- **⚠️ Limitation**: Channel names, types, and positions cannot be changed after creation in this release. Plan your structure before creating.
+- **⚠️ Limitation**: A channel's privacy (Public vs. Private) cannot be changed after creation. If you need to change it, delete the channel and create a new one. Name, description, type (text/voice), and position can all be changed after creation.
 
 ### Setting Up Roles
 
