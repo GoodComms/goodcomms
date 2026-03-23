@@ -108,12 +108,32 @@ Executes a built-in server-side moderation action.
 * **Creating/Deleting commands**: Requires `ManageWebhooks` permission or admin
 * **Executing commands**: Optional `required_permission` field per command
 
-Available permission strings:
-- `admin_access`
-- `manage_users`
-- `manage_channels`
-- `manage_messages`
-- `manage_webhooks`
+Available permission strings (use any of these in the `required_permission` field):
+
+| Permission | Typical use case for slash commands |
+|------------|-------------------------------------|
+| `admin_access` | Catch-all gate for any command you want restricted to admins |
+| `manage_users` | Commands that affect users — kick, ban, timeout via a bot |
+| `manage_channels` | Commands that reconfigure channels via an external system |
+| `manage_messages` | Commands that trigger bulk message cleanup in an external tool |
+| `manage_webhooks` | Commands that administer integrations — e.g. `/rotate-token` calling your bot API |
+| `manage_permissions` | Commands that change role assignments via an external system |
+| `prune_attachments` | Commands that trigger media or file cleanup — e.g. `/cleanup-media` calling a housekeeping service |
+| `drive_read` | Commands that read or list drive content — e.g. `/list-backups` forwarding to a storage service |
+| `drive_write` | Commands that upload or modify drive content — e.g. `/backup-now` triggering an external backup job |
+| `drive_manage` | Commands that administer drive storage — e.g. `/prune-drive` calling a cleanup endpoint |
+| `join_voice` | Gate a command to users who have voice access — e.g. `/request-song` for a voice channel music bot |
+| `speak_voice` | Gate a command to users who can speak — e.g. `/queue-mic` for moderated voice sessions |
+| `view_channel` | Gate a command to users who have channel visibility — useful in private channels where even `Default` members may vary |
+| `send_message` | Gate a command to users who can post — rarely needed, since posting the command already implies this |
+
+**Practical example — drive cleanup command restricted to drive managers:**
+
+1. Create a webhook slash command named `prune-drive`
+2. Set `required_permission` to `drive_manage`
+3. Set the Webhook URL to your housekeeping service endpoint
+
+Only users with the `drive_manage` permission can run `/prune-drive`. Everyone else sees a permission error.
 
 ---
 
