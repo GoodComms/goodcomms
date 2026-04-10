@@ -2,9 +2,10 @@
 
 All notable changes for each release.
 
----
+## [0.9.98] - 2026-03-22 (updated 2026-04-09)
 
-## [0.9.98] - 2026-03-22
+### Post-Release Fixes (2026-04-09)
+- **Windows encoder selection improved**: Fixed an issue where the video encoder might not be selected correctly on systems with multiple GPUs (e.g., NVIDIA discrete + AMD iGPU). The encoder selection now properly identifies and uses the correct vendor. Additionally, a software encoder fallback is now available if hardware encoding cannot be initialized, preventing silent video failures.
 
 ### New Features
 - **Channel editing**: Server administrators can now edit a channel's name, description, and text/voice flags directly from the Admin panel. Changes apply immediately for all connected users.
