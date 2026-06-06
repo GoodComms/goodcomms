@@ -1,20 +1,20 @@
-# GoodComms v0.9.98a
+# GoodComms v0.9.98
 
-A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing using native Rust clients, a lightweight server, and your data on hardware you own.
+A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing — native Rust clients, lightweight server, your data on hardware you own.
 
 ---
 
 ## Why GoodComms?
 
-Most communication platforms, even those that offer "self-hosting," still tie you to a centralized account system, ship as Electron web apps, or collect data somewhere in the pipeline. GoodComms does not.
+Most communication platforms — even those that offer "self-hosting" — still tie you to a centralized account system, ship as Electron web apps, or collect data somewhere in the pipeline. GoodComms doesn't do any of that.
 
-- **No cloud accounts.** You register on the server you connect to. That is the only place your account exists. No global GoodComms account, no OAuth, and no third-party identity provider.
-- **No telemetry.** No analytics, no tracking, and no external calls. The only optional network dependency is GIF search, which is controlled entirely by the server owner.
-- **Pure native clients.** Windows and Linux binaries compiled from Rust. No browser engine, no Electron, and no runtime. Download and run. This is the same model as old-school TeamSpeak, before everything moved to the cloud.
+- **No cloud accounts.** You register on the server you connect to. That's the only place your account exists — no global GoodComms account, no OAuth, no third-party identity provider.
+- **No telemetry.** No analytics, no tracking, no external calls. The only optional network dependency is GIF search, controlled entirely by the server owner.
+- **Pure native clients.** Windows and Linux binaries compiled from Rust. No browser engine, no Electron, no runtime. Download and run — the same model as old-school TeamSpeak, before everything moved to the cloud.
 - **No surveillance logging.** Server logs contain no IP addresses or account identifiers. Privacy by design.
 - **Lightweight server.** The server authenticates sessions, stores messages in SQLite, and routes media packets without ever processing or decoding them. CPU and RAM requirements are minimal; bandwidth and storage are the real scaling factors.
 
-If you have a friend or community member willing to run a server, all your communication stays between you and them, not a corporation in the middle.
+If you have a friend or community member willing to run a server, all your communication stays between you and them — not a corporation in the middle.
 
 ---
 
@@ -24,7 +24,7 @@ If you have a friend or community member willing to run a server, all your commu
 - **GPU-Accelerated Screen Sharing (Windows)**: Windows Graphics Capture + D3D11 + MFT H.264. Auto-detects NVIDIA, Intel, or AMD hardware. Software fallback on Linux via PipeWire.
 - **Crystal Clear Voice**: Opus audio with noise suppression, AGC, push-to-talk, per-user volume, and deafen support.
 - **Role-Based Access Control**: Hierarchical role system with channel-level and server-wide permissions. Private channels with explicit access control.
-- **Server Drive**: Built-in private file storage running on your own hardware with no third-party cloud.
+- **Server Drive**: Built-in private file storage running on your own hardware — no third-party cloud.
 - **Webhooks & Slash Commands**: Push messages from external services into channels, or trigger external endpoints from chat commands.
 
 ---
@@ -34,13 +34,13 @@ If you have a friend or community member willing to run a server, all your commu
 ### Step 1: Download and Install
 
 - **Windows (Recommended):** Run `gc-client_0.9.98_x64-setup.exe`. Installs with a desktop shortcut. To update, run the new installer.
-- **Windows (Portable):** Run `gc-client.exe` directly. Create a `data/` folder next to the `.exe` to enable Portable Mode. All settings, logs, and cache stay in that folder.
+- **Windows (Portable):** Run `gc-client.exe` directly. Create a `data/` folder next to the `.exe` to enable Portable Mode — all settings, logs, and cache stay in that folder.
 - **Linux:** Portable binary. Requires PipeWire and xdg-desktop-portal for screen sharing.
 
 ### Step 2: Add a Server and Log In
 
 1. Launch the app and click the **+** icon in the sidebar. Enter the address your admin gave you (e.g. `chat.example.com` or an IP address) and click **Connect**.
-2. Create a new account or log in with existing credentials. Accounts are local to each server as there is no global GoodComms account.
+2. Create a new account or log in with existing credentials. Accounts are local to each server — there is no global GoodComms account.
 3. Enable **Save Password** to get a one-click quick-join button on your next launch.
 
 ### Step 3: Voice Channels
@@ -60,7 +60,7 @@ Click **Go Live** in the bottom left and choose a window or display. Your stream
 | Strikethrough | `~~text~~` |
 | Inline code | `` `code` `` |
 | Code block | ` ```code``` ` |
-| Slash commands | `/me`, `/shrug`, `/tableflip`, `/unflip` |
+| Slash commands | `/me`, `/shrug`, `/tableflip` |
 
 ---
 
@@ -74,7 +74,7 @@ How your proxy reaches GoodComms depends on where your proxy runs:
 
 **Option A — Proxy on the host (Caddy installed directly on the server)**
 
-Expose port 4076 to the host's loopback interface. No shared Docker network needed. GoodComms is self-contained and your proxy hits it via `localhost`.
+Expose port 4076 to the host's loopback interface. No shared Docker network needed — GoodComms is self-contained and your proxy hits it via `localhost`.
 
 ```yaml
 services:
@@ -111,11 +111,11 @@ chat.yourdomain.com {
 }
 ```
 
-> **Proxy on a different LAN machine?** Replace `127.0.0.1:4076:4076` with `4076:4076` to bind to all interfaces, then point your proxy at this server's LAN IP (e.g. `reverse_proxy 192.168.1.50:4076`). Ensure your firewall blocks port 4076 from the internet as it is plain HTTP.
+> **Proxy on a different LAN machine?** Replace `127.0.0.1:4076:4076` with `4076:4076` to bind to all interfaces, then point your proxy at this server's LAN IP (e.g. `reverse_proxy 192.168.1.50:4076`). Ensure your firewall blocks port 4076 from the internet — it's plain HTTP.
 
 **Option B — Proxy in Docker (Caddy running as a container)**
 
-Add both containers to the same Docker network. Caddy reaches GoodComms by container name. No port needs to be exposed to the host at all.
+Add both containers to the same Docker network. Caddy reaches GoodComms by container name — no port needs to be exposed to the host at all.
 
 ```yaml
 services:
@@ -164,7 +164,7 @@ chat.yourdomain.com {
 1. Uncomment `ADMIN_USER` and `ADMIN_PASS` in your compose file and set your credentials before first launch.
 2. Start the server: `docker compose up -d`
 3. Connect with the client and log in to claim **Owner** status.
-4. **Security**: Stop the server (`docker compose down`), remove the `ADMIN_USER` and `ADMIN_PASS` lines, then restart (`docker compose up -d`). Your account is now in the database. Credentials in a config file are a security risk.
+4. **Security**: Stop the server (`docker compose down`), remove the `ADMIN_USER` and `ADMIN_PASS` lines, then restart (`docker compose up -d`). Your account is now in the database — credentials in a config file are a security risk.
 
 > **Firewall**: UDP ports 4077 and 4078 must be open. TCP is handled by your proxy. Without the UDP ports, voice and video will not work.
 
@@ -190,7 +190,7 @@ All options can be set via CLI flag or environment variable. Environment variabl
 | Disable TLS | `--no-tls` | `NO_TLS` | `false` |
 | Log Directory | `--log-dir` | `LOG_DIR` | `logs` |
 
-All ports are fully configurable. When using Docker Compose, changing a port requires updating **both** the environment variable **and** the `ports:` mapping. They must match. For example, to run the voice relay on port 5000:
+All ports are fully configurable. When using Docker Compose, changing a port requires updating **both** the environment variable **and** the `ports:` mapping — they must match. For example, to run the voice relay on port 5000:
 
 ```yaml
 environment:
@@ -199,7 +199,7 @@ ports:
   - "5000:5000/udp"   # was 4077:4077/udp
 ```
 
-This applies to `PORT`, `VOICE_PORT`, and `VIDEO_PORT`. The internal `PORT` value is particularly useful if another service already occupies 4076. Note that for reverse proxy setups, the internal `PORT` is invisible to clients. Only the proxy's public-facing port matters to them.
+This applies to `PORT`, `VOICE_PORT`, and `VIDEO_PORT`. The internal `PORT` value is particularly useful if another service already occupies 4076. Note that for reverse proxy setups, the internal `PORT` is invisible to clients — only the proxy's public-facing port matters to them.
 
 **CLI example:**
 ```bash
@@ -221,10 +221,10 @@ Permissions span channel-level controls (view, send, voice, manage messages, man
 
 #### Security Hardening
 
-- **Bootstrapping**: No default passwords. Owner credentials must be set explicitly and removed after first login.
+- **Bootstrapping**: No default passwords — owner credentials must be set explicitly and removed after first login.
 - **Revocation**: JWT sessions are invalidated immediately on logout or credential change.
-- **Privacy**: All media, avatars, and drive files require a valid authentication token. No public routes.
-- **Hardening**: Rate limiting, SSRF protection for link previews, and parameterized queries throughout.
+- **Privacy**: All media, avatars, and drive files require a valid authentication token — no public routes.
+- **Hardening**: Rate limiting, SSRF protection for link previews, parameterized queries throughout.
 
 ---
 
@@ -232,7 +232,8 @@ Permissions span channel-level controls (view, send, voice, manage messages, man
 
 ### All Platforms
 - **Screen sharing**: Starting a second stream in the same app session may not be visible to viewers. Restart the client before streaming again if this occurs.
-- **Privacy Settings**: A channel cannot be switched between Public and Private after it is created. If you need to change a channel's privacy, please delete it and create a new one.
+- **Channels**: Name, type, and position cannot be changed after creation in this release.
+- **Drive**: Folder sizes display as 0.0 MB.
 
 ### Linux
 - Screen sharing: System audio loopback is not supported.
@@ -243,9 +244,9 @@ Permissions span channel-level controls (view, send, voice, manage messages, man
 ## Technical Specifications
 
 - **Clients**: Native Windows and Linux binaries (Rust). Chat UI: tiny-skia (CPU). Video pipeline: Direct3D 11 + Windows Graphics Capture + MFT H.264 (GPU, Windows); PipeWire + OpenH264 (software, Linux).
-- **Server**: Single Rust binary. Axum HTTP/WebSocket + UDP relay. SQLite via sqlx. Pure packet relay with zero media processing server-side.
+- **Server**: Single Rust binary. Axum HTTP/WebSocket + UDP relay. SQLite via sqlx. Pure packet relay — zero media processing server-side.
 - **Video**: Simulcast SFU with FEC parity recovery for single-fragment packet loss. Quality tiers: Source / 1080p / 720p.
-- **Audio**: Opus codec. Jitter buffer, noise suppression (nnnoiseless), AGC, and push-to-talk.
+- **Audio**: Opus codec. Jitter buffer, noise suppression (nnnoiseless), AGC, push-to-talk.
 - **Protocol**: V5 binary header (20 bytes) for low-latency media relay.
 
 ---
@@ -261,8 +262,8 @@ Permissions span channel-level controls (view, send, voice, manage messages, man
 
 ## Getting Help
 
-Found a bug or have a question? Open an issue: [github.com/GoodComms/goodcomms/issues](https://github.com/GoodComms/goodcomms/issues)
+Found a bug or have a question? Open an issue: [github.com/goodcomms/goodcomms/issues](https://github.com/goodcomms/goodcomms/issues)
 
 ---
 
-*GoodComms v0.9.98a — Engineered for Privacy. Built with Rust.*
+*GoodComms v0.9.98 — Engineered for Privacy. Built with Rust.*
