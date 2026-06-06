@@ -2,6 +2,21 @@
 
 All notable changes for each release.
 
+---
+
+## [0.9.98a] - 2026-06-05
+
+### Improvements
+- **Faster recovery from a frozen video stream**: When a screen-share viewer's video stalls (a dropped keyframe or a brief network hiccup), the client now asks the streamer for a fresh keyframe and recovers quickly, instead of staying frozen until the next periodic keyframe. Repeated requests back off automatically so a struggling connection isn't flooded.
+- **Display no longer sleeps while streaming or watching**: Your monitor and the app stay awake during an active screen share or while watching one, preventing the freeze that happened when the display went to sleep — especially on laptops on battery.
+
+### Bug Fixes / UX
+- **Clean stop when a shared window closes**: Closing the window or screen you're sharing now stops the share cleanly with a clear notification instead of erroring.
+- **Installer no longer pre-checks the desktop shortcut**: "Create desktop shortcut" is now unchecked by default during installation.
+- **Version label placement**: The client version now appears directly under its label.
+
+---
+
 ## [0.9.98] - 2026-03-22 (updated 2026-04-09)
 
 ### Post-Release Fixes (2026-04-09)
