@@ -4,7 +4,23 @@ All notable changes for each release.
 
 ---
 
-## [0.9.98] - 2026-03-21
+## [0.9.98a] - 2026-06-06
+
+### Improvements
+- **Smoother screen-share video**: The encoder now uses constant-bitrate rate control, so it spends its full bitrate budget steadily — fast on-screen motion stays sharp instead of getting starved and blocky.
+- **Display no longer sleeps while streaming or watching**: Your monitor and the app stay awake during an active screen share or while watching one, preventing the freeze that happened when the display went to sleep — especially on laptops on battery.
+
+### Bug Fixes / UX
+- **Clean stop when a shared window closes**: Closing the window or screen you're sharing now stops the share cleanly with a clear notification instead of erroring.
+- **Installer no longer pre-checks the desktop shortcut**: "Create desktop shortcut" is now unchecked by default during installation.
+- **Version label placement**: The client version now appears directly under its label.
+
+---
+
+## [0.9.98] - 2026-03-22 (updated 2026-04-09)
+
+### Post-Release Fixes (2026-04-09)
+- **Windows encoder selection improved**: Fixed an issue where the video encoder might not be selected correctly on systems with multiple GPUs (e.g., NVIDIA discrete + AMD iGPU). The encoder selection now properly identifies and uses the correct vendor. Additionally, a software encoder fallback is now available if hardware encoding cannot be initialized, preventing silent video failures.
 
 ### New Features
 - **Channel editing**: Server administrators can now edit a channel's name, description, and text/voice flags directly from the Admin panel. Changes apply immediately for all connected users.
