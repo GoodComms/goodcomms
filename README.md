@@ -1,6 +1,6 @@
 # GoodComms v0.9.98
 
-A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing — native Rust clients, lightweight server, your data on hardware you own.
+A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing native Rust clients, lightweight server, your data on hardware you own.
 
 ---
 
