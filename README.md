@@ -1,4 +1,4 @@
-# GoodComms v0.9.98
+# GoodComms v0.9.98a
 
 A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing using native Rust clients, a lightweight server, and your data on hardware you own.
 
@@ -265,4 +265,4 @@ Found a bug or have a question? Open an issue: [github.com/GoodComms/goodcomms/i
 
 ---
 
-*GoodComms v0.9.98 — Engineered for Privacy. Built with Rust.*
+*GoodComms v0.9.98a — Engineered for Privacy. Built with Rust.*
