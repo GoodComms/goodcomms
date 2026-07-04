@@ -89,6 +89,7 @@ services:
       - IP_ADDR=0.0.0.0
       - PORT=4076
       - NO_TLS=true             # The proxy handles TLS — do not remove this
+      - TRUST_PROXY=true        # Rate limiting keys on X-Forwarded-For — required behind a proxy (v0.9.99+)
       - DATABASE_PATH=/app/data/goodcomms.db
       - STORAGE_DIR=/app/uploads
       - DRIVE_DIR=/app/drive
@@ -140,6 +141,7 @@ services:
       - IP_ADDR=0.0.0.0
       - PORT=4076
       - NO_TLS=true
+      - TRUST_PROXY=true         # Required behind a proxy (v0.9.99+)
       - DATABASE_PATH=/app/data/goodcomms.db
       - STORAGE_DIR=/app/uploads
       - DRIVE_DIR=/app/drive

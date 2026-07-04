@@ -65,6 +65,7 @@ services:
       - VOICE_PORT=4077
       - VIDEO_PORT=4078
       - NO_TLS=true        # Proxy handles TLS — critical
+      - TRUST_PROXY=true   # Rate limiting keys on X-Forwarded-For — required behind a proxy (v0.9.99+)
       - DATABASE_PATH=/app/data/goodcomms.db
       - STORAGE_DIR=/app/uploads
       - DRIVE_DIR=/app/drive
@@ -393,6 +394,7 @@ nssm start GoodComms
 |----------|---------|-------------|
 | `PORT` | 443 | Main TCP port |
 | `NO_TLS` | false | Set to `true` when behind proxy |
+| `TRUST_PROXY` | false | Rate limiting/bans key on the first `X-Forwarded-For` hop. Set to `true` behind a reverse proxy (required for Mode A, v0.9.99+); leave off otherwise — the header is forgeable without a proxy |
 | `VOICE_PORT` | 4077 | UDP voice port |
 | `VIDEO_PORT` | 4078 | UDP video port |
 | `DATABASE_PATH` | `data/goodcomms.db` | SQLite database |

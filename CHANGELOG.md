@@ -29,6 +29,7 @@ All notable changes for each release.
 - **Fixed a crash affecting new installs**: A single corrupted image on a server could crash every freshly-installed client on login. Images are now validated on both the server (at upload) and the client (at display).
 - **Rate limiter fix for reverse-proxy deployments**: Behind a reverse proxy, a burst of legitimate reconnects could trip the brute-force limiter and ban the proxy itself, taking the server offline for everyone. Only failed logins count now, and proxy deployments should set `TRUST_PROXY=true` (see server.env.example).
 - **Upload errors are human-readable**, and error popups can actually be dismissed.
+- **Failed drive transfers clear themselves and show why**: a failed upload/download used to leave its progress entry stuck as "active" forever with no feedback.
 - **Unauthorized admin actions now return a clear error** instead of nothing happening.
 - **Drive folders open on double-click.**
 
