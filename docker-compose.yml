@@ -37,6 +37,7 @@ services:
       - VOICE_PORT=4077
       - VIDEO_PORT=4078
       - NO_TLS=true        # Proxy handles TLS — critical
+      - TRUST_PROXY=true   # Rate-limit/ban real client IPs (X-Forwarded-For) — critical behind a proxy
       - DATABASE_PATH=/app/data/goodcomms.db
       - STORAGE_DIR=/app/uploads
       - DRIVE_DIR=/app/drive

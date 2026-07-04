@@ -10,7 +10,7 @@ This guide takes you from download to a running community — whether you're joi
 
 Two versions are available:
 
-- **Installer (`gc-client_0.9.98_x64-setup.exe`)**: Recommended for most users. Installs the app, adds a desktop shortcut, and handles file associations. To update, just run the new installer.
+- **Installer (`gc-client_0.9.99_x64-setup.exe`)**: Recommended for most users. Installs the app, adds a desktop shortcut, and handles file associations. To update, just run the new installer.
 - **Portable (`.exe`)**: Run without installing — useful for USB drives or restricted environments. To enable Portable Mode, create a folder named `data` in the same directory as the `.exe`. GoodComms will detect it and keep all settings, logs, and cache in that folder instead of AppData.
 
 ### Linux
@@ -292,7 +292,7 @@ docker compose up -d         # Restart with the new image (zero config changes n
 To pin to a specific version rather than tracking `latest`, set the image tag in your compose file:
 
 ```yaml
-image: goodcomms/gc-server:0.9.98   # pinned
+image: goodcomms/gc-server:0.9.99   # pinned
 # or
 image: goodcomms/gc-server:latest   # always pulls newest on `docker compose pull`
 ```

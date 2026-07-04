@@ -1,4 +1,4 @@
-# GoodComms v0.9.98a
+# GoodComms v0.9.99
 
 A self-hosted communication platform for communities that value privacy and control. Chat, voice, and screen sharing using native Rust clients, a lightweight server, and your data on hardware you own.
 
@@ -33,7 +33,7 @@ If you have a friend or community member willing to run a server, all your commu
 
 ### Step 1: Download and Install
 
-- **Windows (Recommended):** Run `gc-client_0.9.98_x64-setup.exe`. Installs with a desktop shortcut. To update, run the new installer.
+- **Windows (Recommended):** Run `gc-client_0.9.99_x64-setup.exe`. Installs with a desktop shortcut. To update, run the new installer.
 - **Windows (Portable):** Run `gc-client.exe` directly. Create a `data/` folder next to the `.exe` to enable Portable Mode. All settings, logs, and cache stay in that folder.
 - **Linux:** Portable binary. Requires PipeWire and xdg-desktop-portal for screen sharing.
 
@@ -265,4 +265,4 @@ Found a bug or have a question? Open an issue: [github.com/GoodComms/goodcomms/i
 
 ---
 
-*GoodComms v0.9.98a — Engineered for Privacy. Built with Rust.*
+*GoodComms v0.9.99 — Engineered for Privacy. Built with Rust.*

@@ -4,6 +4,36 @@ All notable changes for each release.
 
 ---
 
+## [0.9.99] - 2026-07-04 — The Video Streaming & Reliability Update
+
+### Screen Sharing
+- **Perfectly smooth motion from any monitor**: The encoder now samples frames on an exact fixed-rate clock instead of following your monitor's refresh timing — streaming from a 144Hz or 120Hz display no longer produces periodic micro-stutter for viewers.
+- **60 FPS streaming option**: Settings → Video Streaming → Stream Frame Rate (30 default / 60). Smoother motion at the same bitrate.
+- **New Go Live picker**: Clicking Go Live opens a single window with live preview snapshots of every screen and window, plus the Include Audio toggle and capture device — click a preview and the stream starts instantly.
+- **Encoder fallback**: If your GPU encoder fails — at startup or mid-stream — the stream automatically switches to software encoding with a notification instead of dying silently. A new Video Encoder setting (Automatic / Hardware Only / Force Software) covers flaky GPU drivers.
+- **Stream settings apply live**: Frame rate, encoder mode, and audio auto-leveling changes now take effect on a running stream — no restart needed.
+- **Auto-leveled stream audio**: Quiet system audio (e.g. low speaker volume at night) is automatically brought up to a consistent level for viewers. Settings → "Auto-level stream audio" (default on).
+- **Resizing a shared window now follows through to viewers** instead of the stream staying at the original size forever.
+- **Viewer improvements**: per-stream mute button, dark-themed viewer toolbar, and automatic self-healing if a stream freezes after a network blip.
+- **Fullscreen game capture guard**: Exclusive-fullscreen games that can't be captured now stop cleanly with guidance (use Borderless Windowed) instead of a silent dead stream.
+
+### Server Administration
+- **Server settings now actually work**: "Allow Public Registration" is enforced, Max Upload Size is enforced (live, 0 = unlimited), and Max Download Speed applies without a restart. Invalid values are rejected with a clear message when saving.
+- **Automatic database backups**: Set an interval, how many backups to keep (oldest rotated out), and where they go. A new Maintenance page in the admin panel adds manual Backup, Restart Server, Clear All Messages, and Emergency Stop — all behind confirmation dialogs. Backups use a crash-safe snapshot method.
+- **Destructive actions ask first**: Deleting a user, channel, or role now shows a confirmation dialog. Deleting a user also disconnects them immediately.
+- **Settings fields save explicitly**: Text settings now have a Save button per field instead of applying every keystroke.
+
+### Reliability & Fixes
+- **Stream audio works after restarting a stream**: Restarting a screen share could leave viewers with video but no audio (for up to 20 seconds, or the entire stream if the previous one was short). Viewers now resync to the new stream's audio immediately.
+- **Switching servers is clean**: Connecting to a different server fully resets the previous session (no more leftover channels or state), and the Servers tab shows your current connection with a proper Disconnect button.
+- **Fixed a crash affecting new installs**: A single corrupted image on a server could crash every freshly-installed client on login. Images are now validated on both the server (at upload) and the client (at display).
+- **Rate limiter fix for reverse-proxy deployments**: Behind a reverse proxy, a burst of legitimate reconnects could trip the brute-force limiter and ban the proxy itself, taking the server offline for everyone. Only failed logins count now, and proxy deployments should set `TRUST_PROXY=true` (see server.env.example).
+- **Upload errors are human-readable**, and error popups can actually be dismissed.
+- **Unauthorized admin actions now return a clear error** instead of nothing happening.
+- **Drive folders open on double-click.**
+
+---
+
 ## [0.9.98a] - 2026-06-06
 
 ### Improvements

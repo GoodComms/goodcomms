@@ -1,4 +1,4 @@
-# GoodComms Deployment Scenarios (v0.9.98)
+# GoodComms Deployment Scenarios (v0.9.99)
 
 GoodComms supports three deployment modes. Choose the one that fits your infrastructure.
 
@@ -50,7 +50,7 @@ Get-Content .env | Where-Object { $_ -match '^\s*[^#]' } | ForEach-Object {
 ```yaml
 services:
   goodcomms-server:
-    image: goodcomms/gc-server:0.9.98
+    image: goodcomms/gc-server:0.9.99
     container_name: gc-server
     restart: unless-stopped
     networks:
@@ -108,7 +108,7 @@ chat.yourdomain.com {
 ```yaml
 services:
   goodcomms-server:
-    image: goodcomms/gc-server:0.9.98
+    image: goodcomms/gc-server:0.9.99
     container_name: gc-server
     restart: unless-stopped
     ports:
@@ -152,7 +152,7 @@ services:
 ```yaml
 services:
   goodcomms-server:
-    image: goodcomms/gc-server:0.9.98
+    image: goodcomms/gc-server:0.9.99
     container_name: gc-server
     restart: unless-stopped
     ports:
